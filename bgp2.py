@@ -7,7 +7,7 @@ HERE = os.path.dirname(__file__)
 if __name__ == '__main__':
     testbed = load(os.path.join(HERE, 'tb.yml'))
 
-    uut = testbed.devices['xr1']
+    uut = testbed.devices['abr']
     uut.connect(log_stdout=False)
 
     uut.connect()

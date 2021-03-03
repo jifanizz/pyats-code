@@ -1,0 +1,14 @@
+--- diff-before/bgp_iosxr_abr_ops.txt
++++ diff-after/bgp_iosxr_abr_ops.txt
+ info:
+  instance:
+   default:
+    vrf:
+     default:
+      neighbor:
+       1.1.1.1:
+-       session_state: established
++       session_state: active
+-       bgp_negotiated_capabilities: 
+-        four_octets_asn: advertised received
+-        route_refresh: advertised received

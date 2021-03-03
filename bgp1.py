@@ -7,12 +7,10 @@ import pprint
 from genie.testbed import load
 
 testbed = load('tb.yml')
-uut = testbed.devices['xr1']
-
-uut.connect(log_stdout=False)
+uut = testbed.devices['abr']
 
 # connect to it
-uut.connect()
+uut.connect(log_stdout=False)
 
 # let's learn a whole model instead
 bgp = uut.learn('bgp')

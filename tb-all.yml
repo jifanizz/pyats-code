@@ -1,0 +1,40 @@
+devices:
+  abr:
+    connections:
+      cli:
+        ip: 10.85.171.60
+        protocol: ssh
+    credentials:
+      default:
+        password: cisco
+        username: cisco
+      enable:
+        password: cisco
+    os: iosxr
+    type: iosxr
+  csr1:
+    connections:
+      cli:
+        ip: 10.85.171.61
+        protocol: ssh
+    credentials:
+      default:
+        password: cisco
+        username: cisco
+      enable:
+        password: cisco
+    os: iosxr
+    type: iosxr
+  csr2:
+    connections:
+      cli:
+        ip: 10.85.171.62
+        protocol: ssh
+    credentials:
+      default:
+        password: cisco
+        username: cisco
+      enable:
+        password: cisco
+    os: iosxr
+    type: iosxr

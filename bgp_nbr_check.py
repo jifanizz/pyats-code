@@ -2,6 +2,8 @@
 
 # To get a logger for the script
 import logging
+from tabulate import tabulate
+
 
 # Import of PyATS library
 from pyats import aetest
@@ -17,8 +19,6 @@ import argparse
 from pyats.topology import loader
 
 from genie.testbed import load
-from tabulate import tabulate
-
 
 
 # Get your logger for your script
@@ -56,82 +56,11 @@ class common_setup(aetest.CommonSetup):
         self.parent.parameters.update(dev=device_list)
 
 
+
+
 ###################################################################
 #                     TESTCASES SECTION                           #
 ###################################################################
-
-
-class Verify_Interface(aetest.Testcase):
-
-    @aetest.test
-    def interface_operational_status(self):
-        """
-        Validate that interface is 'up'.
-        """
-
-        for dev in self.parent.parameters['dev']:
-            intfs = dev.parse('show interfaces GigabitEthernet0/0/0/0')
-            int_stat=intfs['GigabitEthernet0/0/0/0']['oper_status']
-
-            if int_stat != 'up':
-                self.failed("Interface GigabitEthernet0/0/0/0 is down")
-            else:
-                pass
-
-    
-    @aetest.test
-    def interface_CRC_errors(self):
-        """
-        Report on the number of CRS errors on interface
-        """
-
-        for dev in self.parent.parameters['dev']:
-            intfs = dev.parse('show interfaces GigabitEthernet0/0/0/0')
-            in_crc=intfs['GigabitEthernet0/0/0/0']['counters']['in_crc_errors']
-
-            if in_crc > 0:
-                self.failed("CRC Errors found")
-            else:
-                pass
-    
-    @aetest.test
-    def interface_drop_errors(self):
-        """
-        Report on the number of interface drops
-        """
-
-        for dev in self.parent.parameters['dev']:
-            intfs = dev.parse('show interfaces GigabitEthernet0/0/0/0')
-            in_drops=intfs['GigabitEthernet0/0/0/0']['counters']['in_total_drops']
-            out_drops=intfs['GigabitEthernet0/0/0/0']['counters']['out_total_drops']
-
-            if in_drops > 0 or out_drops > 0:
-                self.failed("Interface Drops")
-            else:
-                self.passed("No Interface Errors")
-                pass
-            
-class Verify_IGP(aetest.Testcase):
-    
-   
-    @aetest.test
-    def OSPF_Status(self):
-        """
-        Validate OSPF neighbor is up and correct configuration
-        """
-
-        for dev in self.parent.parameters['dev']:
-            ospf_nbr = dev.parse('show ospf vrf all-inclusive neighbor detail')
-            nbr_state = ospf_nbr['vrf']['default']['address_family']['ipv4']['instance']['1']['areas']['0.0.0.0']['interfaces']['GigabitEthernet0/0/0/0']['neighbors']['10.0.0.6']['state']
-            ospf_int = dev.parse('show ospf vrf all-inclusive interface GigabitEthernet0/0/0/0')
-            ospf_int_cost=ospf_int['vrf']['']['address_family']['ipv4']['instance']['1']['areas']['0.0.0.0']['interfaces']['GigabitEthernet0/0/0/0']['cost']
-            ospf_line_proto=ospf_int['vrf']['']['address_family']['ipv4']['instance']['1']['areas']['0.0.0.0']['interfaces']['GigabitEthernet0/0/0/0']['line_protocol']
-            if nbr_state == 'full' and ospf_int_cost == 1 and ospf_line_proto == True: 
-                self.passed("OSPF Neigbor Up")
-                pass
-            else:
-                self.failed("OSPF Neighbor Down")
-
 
 
 class Verify_BGP_Neighbor_Status(aetest.Testcase):

@@ -1,0 +1,20 @@
+---
+- hosts: xr
+  gather_facts: no
+ 
+  tasks:
+
+
+  - name: Destroy ACL 100
+    iosxr_config:
+      lines: 
+        - no ipv4 access-list 100 
+
+  - name: Create ACL 100
+    iosxr_config:
+      lines: 
+        - ipv4 access-list 100 permit tcp any any eq 22
+        - ipv4 access-list 100 permit tcp any any eq 80
+        - ipv4 access-list 100 permit tcp any any eq 443
+
+  

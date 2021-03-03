@@ -16,5 +16,5 @@
    'matches': {'l3': {'ipv4': {'source_ipv4_network': {'any': {'source_ipv4_network': 'any'}},
       'destination_ipv4_network': {'any': {'destination_ipv4_network': 'any'}}}},
     'l4': {'tcp': {'destination_port': {'operator': {'operator': 'eq',
-        'port': '443'}}}}},
+        'port': 'https'}}}}},
    'actions': {'forwarding': 'permit', 'logging': 'log-none'}}}}

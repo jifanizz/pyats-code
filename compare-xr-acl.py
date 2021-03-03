@@ -4,40 +4,38 @@ from genie.utils.diff import Diff
 import ast
 import json
 import argparse
+from tabulate import tabulate
 
 
+# configure the argment extension to the script
 parser = argparse.ArgumentParser()
-
-#parser.add_argument('--acl_id', dest='acl_id', type=str)
 parser.add_argument('--acl_id', type=str)
 acl_id = parser.parse_args()
-#print(acl_id.acl_id)
 
 
-# Load the different testbeds for base router and comparing routers
-testbed_2 = load('xr-tb-2.yaml')
+# Load the testbeds for base router and comparing routers
+testbed = load('tb-all.yml')
 
-#Connect to xe1 and extract ACLs
-#xr1=testbed_1.devices['xr1']
-#xr1.connect(log_stdout=False)
-#acl_list = xr1.parse('show access-list afi-all')
 
+# Load template ACL to compare to
 base_acl=open('100-base-acl.json','r')
-
 contents=base_acl.read()
 orig_acl=ast.literal_eval(contents)
-#print(type(orig_acl))
 
-#with open('100-base-acl.json', 'r') as base_acl:
-#acl_id = '100'
-
-for name,dev in testbed_2.devices.items():
+tr=[]
+# Run the diff to compare ACLs from the different routers.
+for name,dev in testbed.devices.items():
     dev.connect(log_stdout=False)
     all_acl=dev.parse('show access-list afi-all')
     compare_acl=(all_acl[acl_id.acl_id])
     diff = Diff(orig_acl, compare_acl)
     diff.findDiff()
     if str(diff):
-        print(f'ACL {acl_id.acl_id} on router {name} is not compliant')
+        status='non-compliant'
     else:
-        print(f'ACL {acl_id.acl_id} on router {name} is compliant')
+        status='compliant'
+    tr.append((name,acl_id.acl_id,status))
+
+print('\n')
+print(tabulate(tr, headers=['Router', 'ACL-ID', 'Compliance']))
+print('\n')
